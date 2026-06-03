@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>实时多图表交易仪表盘</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://unpkg.com/lightweight-charts@5/dist/lightweight-charts.standalone.production.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <div>
+          <h1>实时多图表</h1>
+          <p>本地行情看板</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <label class="sync-toggle" for="syncCharts">
+          <input id="syncCharts" type="checkbox" />
+          <span>同品种联动</span>
+        </label>
+        <label class="select-label" for="chartCount">图表数量</label>
+        <select id="chartCount" aria-label="图表数量">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+        </select>
+      </div>
+    </header>
+
+    <section class="controlbar" aria-label="回放和绘图工具">
+      <div class="control-group replay-controls">
+        <label class="tool-toggle" for="replayMode">
+          <input id="replayMode" type="checkbox" />
+          <span>回放回测</span>
+        </label>
+        <label class="compact-label" for="replayDate">截止日期</label>
+        <input id="replayDate" type="date" />
+        <input id="replayTime" type="time" step="60" aria-label="截止时间" />
+        <input id="replayCutoff" type="datetime-local" aria-label="精确截止时间" />
+        <button id="replayApply" type="button">应用</button>
+        <button id="replayPick" type="button">图上选择</button>
+        <button id="replayStep" type="button">前进</button>
+        <button id="replayPlay" type="button">播放</button>
+        <select id="replaySpeed" aria-label="回放速度">
+          <option value="1">1x</option>
+          <option value="2">2x</option>
+          <option value="5">5x</option>
+          <option value="10">10x</option>
+        </select>
+        <button id="replayReset" type="button">重置</button>
+        <span id="replayStatus" class="control-status">实时模式</span>
+      </div>
+      <div class="control-group drawing-controls">
+        <label class="compact-label" for="drawingTool">绘图</label>
+        <select id="drawingTool" aria-label="绘图工具">
+          <option value="none">选择工具</option>
+          <option value="trend">趋势线</option>
+          <option value="hline">水平线</option>
+          <option value="rect">矩形</option>
+          <option value="fib">斐波那契</option>
+          <option value="text">文字</option>
+        </select>
+        <input id="drawingColor" type="color" value="#20c7b1" aria-label="绘图颜色" />
+        <button id="drawingUndo" type="button">撤销</button>
+        <button id="drawingClear" type="button">清除</button>
+      </div>
+    </section>
+
+    <main id="dashboard" class="dashboard" data-count="4"></main>
+
+    <template id="panelTemplate">
+      <section class="panel">
+        <div class="panel-top">
+          <div class="panel-selects">
+            <select class="instrument-select" aria-label="交易品种"></select>
+            <select class="interval-select" aria-label="时间周期"></select>
+          </div>
+          <div class="price-strip">
+            <span class="price-value">--</span>
+            <span class="price-change">--</span>
+          </div>
+        </div>
+        <div class="indicator-toolbar">
+          <details class="indicator-menu">
+            <summary>指标</summary>
+            <div class="indicator-list"></div>
+          </details>
+          <span class="status-text">加载中</span>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap">
+            <div class="chart-host"></div>
+            <div class="fvg-layer"></div>
+            <div class="volume-profile-layer"></div>
+            <div class="drawing-layer"></div>
+            <div class="drawing-preview-layer"></div>
+          </div>
+          <div class="indicator-panes">
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <script src="/static/indicator_engine.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

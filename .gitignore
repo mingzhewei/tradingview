@@ -1,0 +1,13 @@
+.venv/
+node_modules/
+.vscode/
+test-results/
+playwright-report/
+__pycache__/
+*.pyc
+logs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.log
+*.lnk
