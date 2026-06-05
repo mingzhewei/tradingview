@@ -248,7 +248,6 @@ class ChartPanel {
     this.paneCharts = new Map();
     this.paneElements = new Map();
     this.paneLevelLines = [];
-    this.overlayResults = new Map();
     this.priceLines = [];
     this.lastClose = null;
     this.dom = panelTemplate.content.firstElementChild.cloneNode(true);
@@ -1038,11 +1037,16 @@ class ChartPanel {
     const enabled = this.config.indicators;
     const bars = this.bars;
     const context = this.indicatorContext();
-    this.overlayResults.clear();
 
     INDICATORS.forEach((indicator) => {
+      const series = indicator.series || [];
+      // Overlay-only indicators (FVG, Volume Profile, auto structure...) carry no
+      // chart series; drawOverlays owns their calculation and rendering, so skip
+      // them here to avoid computing the same heavy result twice per update.
+      if (!series.length) return;
+
       if (!enabled[indicator.key]) {
-        (indicator.series || []).forEach((seriesDef) => {
+        series.forEach((seriesDef) => {
           this.indicatorSeries.get(this.seriesKey(indicator.key, seriesDef.id))?.setData([]);
         });
         return;
@@ -1056,13 +1060,9 @@ class ChartPanel {
         result = {};
       }
 
-      if (indicator.renderOverlay) {
-        this.overlayResults.set(indicator.key, { indicator, result });
-      }
-
-      (indicator.series || []).forEach((seriesDef) => {
-        const series = this.indicatorSeries.get(this.seriesKey(indicator.key, seriesDef.id));
-        series?.setData(result.series?.[seriesDef.id] || []);
+      series.forEach((seriesDef) => {
+        const seriesInstance = this.indicatorSeries.get(this.seriesKey(indicator.key, seriesDef.id));
+        seriesInstance?.setData(result.series?.[seriesDef.id] || []);
       });
     });
 

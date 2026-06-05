@@ -90,22 +90,21 @@
     return null;
   }
 
-  function linePoint(bar, value, extra = {}) {
-    if (!isFiniteNumber(value)) return null;
-    return { time: bar.time, value, ...extra };
-  }
-
   function compact(points) {
     return points.filter(Boolean);
   }
 
   function seriesFromValues(bars, values, colorFn) {
-    return compact(
-      values.map((value, index) => {
-        const extra = colorFn ? { color: colorFn(value, index, values) } : {};
-        return linePoint(bars[index], value, extra);
-      }),
-    );
+    // Emit a whitespace point { time } for non-finite values instead of dropping
+    // them. Keeping every series the same length as the main candle series means
+    // each indicator pane shares the same time-axis indexing, so the logical-range
+    // sync (setVisibleLogicalRange) stays aligned with the main chart.
+    return bars.map((bar, index) => {
+      const value = values[index];
+      if (!isFiniteNumber(value)) return { time: bar.time };
+      const extra = colorFn ? { color: colorFn(value, index, values) } : {};
+      return { time: bar.time, value, ...extra };
+    });
   }
 
   function fieldValues(bars, field) {

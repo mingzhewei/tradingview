@@ -252,7 +252,10 @@ def _resample_ohlcv(df: pd.DataFrame, rule: str) -> pd.DataFrame:
         working["Volume"] = 0.0
     return (
         working.sort_index()
-        .resample(rule, label="right", closed="right")
+        # Label each resampled bar by its open (left edge) so 4h timestamps match
+        # the open-time convention used by 1h/1d and Hyperliquid candles. This keeps
+        # cross-interval crosshair sync (findBarCoveringTime) accurate.
+        .resample(rule, label="left", closed="left")
         .agg({"Open": "first", "High": "max", "Low": "min", "Close": "last", "Volume": "sum"})
         .dropna(subset=["Open", "High", "Low", "Close"])
     )
