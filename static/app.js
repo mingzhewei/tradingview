@@ -92,9 +92,10 @@ function loadReplayState() {
       cutoff: Number.isFinite(Number(saved.cutoff)) ? Number(saved.cutoff) : null,
       playing: false,
       speed: [1, 2, 5, 10].includes(Number(saved.speed)) ? Number(saved.speed) : 1,
+      pickMode: false,
     };
   } catch {
-    replayState = { enabled: false, cutoff: null, playing: false, speed: 1 };
+    replayState = { enabled: false, cutoff: null, playing: false, speed: 1, pickMode: false };
   }
 }
 
@@ -567,7 +568,7 @@ class ChartPanel {
 
   updateDrawingMode() {
     this.chartWrap.classList.toggle("drawing-active", drawingState.tool !== "none");
-    this.chartWrap.classList.toggle("replay-pick-active", replayState.pickMode);
+    this.chartWrap.classList.toggle("replay-pick-active", Boolean(replayState.pickMode));
     if (drawingState.tool === "none") {
       this.pendingDrawing = null;
       this.clearDrawingPreview();

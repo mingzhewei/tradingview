@@ -4,7 +4,13 @@
 
 ## 运行方式
 
-双击 `启动图表.bat`。脚本会自动创建 `.venv`、安装依赖、启动 Flask，并打开浏览器访问 `http://127.0.0.1:5050`。
+本项目可在 Windows 10、macOS、Linux 上运行，需要预先安装 Python 3.10 或更高版本（[下载地址](https://www.python.org/downloads/)，Windows 安装时请勾选 “Add Python to PATH”）。
+
+- Windows：双击 `启动图表.bat`。
+- macOS：双击 `启动图表.command`（首次若提示无法打开，右键→打开，或在终端执行一次 `chmod +x 启动图表.command`）。
+- 任意平台（含 Linux）：在项目目录执行 `python launch.py`（或 `python3 launch.py`）。
+
+启动器会自动完成：创建本地虚拟环境 `.venv`、安装 `requirements.txt` 依赖、启动 Flask，并打开浏览器访问 `http://127.0.0.1:5050`。若系统默认的 `python3` 版本低于 3.10，`launch.py` 会自动查找更高版本（如 `python3.12`、Windows 的 `py -3`）来创建环境。再次启动时如服务已在运行，会直接打开浏览器。
 
 ## 数据源说明
 
@@ -31,6 +37,7 @@
 - 支撑压力热力图：按当前可视区间价格分桶，统计红绿 K 的关键高低点、pivot 触碰和成交量权重，绘制水平热区。
 
 这些工具适合辅助复盘和筛选潜在结构，不能作为确定性交易信号。
+
 - 价格栏：价格变化时按涨跌闪烁绿色或红色。
 
 ## 扩展数据源
